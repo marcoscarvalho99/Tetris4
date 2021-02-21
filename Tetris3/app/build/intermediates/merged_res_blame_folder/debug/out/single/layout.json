@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_resultado.xml",
+        "source": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\src\\main\\res\\layout\\activity_resultado.xml"
+    },
+    {
+        "merged": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_jogo.xml",
+        "source": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\src\\main\\res\\layout\\activity_jogo.xml"
+    },
+    {
+        "merged": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main_game.xml",
+        "source": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\src\\main\\res\\layout\\activity_main_game.xml"
+    },
+    {
+        "merged": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main.xml",
+        "source": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_config.xml",
+        "source": "D:\\tads2021\\android\\tetris\\Tetris3\\app\\src\\main\\res\\layout\\activity_config.xml"
+    }
+]

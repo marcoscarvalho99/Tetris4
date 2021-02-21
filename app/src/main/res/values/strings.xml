@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Tetris3</string>
+    <string name="logo">TETRIS</string>
+    <string name="novo_jogo">new game</string>
+    <string name="continuar">continue</string>
+    <string name="configurar">settings</string>
+    <string name="Pontos">Points:</string>
+    <string name="Próxima">next:</string>
+    <string name="dificuldade">difficulty:</string>
+    <string name="RadioFacil">easy</string>
+    <string name="RadioMedio">median</string>
+    <string name="RadioDificil">hard</string>
+    <string name="confirmar">Confirm</string>
+    <string name="novogame">new game</string>
+    <string name="fimdejogo">game over!</string>
+    <string name="sair">exit</string>
+    <string name="novorecord">new record:</string>
+    <string name="record">record:</string>
+
+</resources>

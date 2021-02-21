@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tetris3</string>
+    <string name="novo_jogo" translatable="false">novo jogo</string>
+    <string name="logo">TETRIS</string>
+    <string name="continuar">continuar</string>
+    <string name="configurar">configuração</string>
+    <string name="Pontos">pontos:</string>
+    <string name="Próxima">proxima:</string>
+    <string name="dificuldade">dificuldade:</string>
+    <string name="RadioFacil">facíl</string>
+    <string name="RadioMedio">Médio</string>
+    <string name="RadioDificil">dificil</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="novogame">novo jogo</string>
+    <string name="record">recorde:</string>
+    <string name="novorecord">vono recorde:</string>
+    <string name="fimdejogo">fim de jogo!</string>
+    <string name="sair">sair</string>
+</resources>

@@ -1,0 +1,12 @@
+com/example/tetris3/databinding/ActivityMainBinding.java
+ com.example.tetris3.databinding.ActivityMainBinding
+com/example/tetris3/databinding/ActivityResultadoBinding.java
+ com.example.tetris3.databinding.ActivityResultadoBinding
+com/example/tetris3/databinding/ActivityJogoBinding.java
+ com.example.tetris3.databinding.ActivityJogoBinding
+com/example/tetris3/BuildConfig.java
+ com.example.tetris3.BuildConfig
+com/example/tetris3/databinding/ActivityConfigBinding.java
+ com.example.tetris3.databinding.ActivityConfigBinding
+com/example/tetris3/DataBindingTriggerClass.java
+ com.example.tetris3.DataBindingTriggerClass

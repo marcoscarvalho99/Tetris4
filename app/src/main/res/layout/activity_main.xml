@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#081457"
+        tools:context=".MainActivity">
+
+        <TextView
+            android:id="@+id/textViewSetings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/configurar"
+            android:textColor="#F6F4F4"
+            android:textSize="44sp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewNewGame"
+            app:layout_constraintStart_toStartOf="@+id/textViewNewGame"
+            app:layout_constraintTop_toBottomOf="@+id/textViewContinue" />
+
+        <TextView
+            android:id="@+id/textViewNewGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="@string/novogame"
+            android:textColor="#F6F4F4"
+            android:textSize="44sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewLogo" />
+
+        <TextView
+            android:id="@+id/textViewContinue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/continuar"
+            android:textColor="#F6F4F4"
+            android:textSize="44sp"
+            app:layout_constraintEnd_toEndOf="@+id/textViewNewGame"
+            app:layout_constraintStart_toStartOf="@+id/textViewNewGame"
+            app:layout_constraintTop_toBottomOf="@+id/textViewNewGame" />
+
+        <TextView
+            android:id="@+id/textViewLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logo"
+            android:textColor="#EA0B0B"
+            android:textSize="88sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.120000005" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

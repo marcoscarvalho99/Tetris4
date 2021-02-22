@@ -10,7 +10,7 @@ import com.example.tetris3.databinding.ActivityConfigBinding
 class Config : AppCompatActivity() {
 
     lateinit var binding: ActivityConfigBinding
-    var dificuldade:String="entrou"
+    var dificuldade:String="medio"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

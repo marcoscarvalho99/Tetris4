@@ -1,5 +1,6 @@
 package com.example.tetris3
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -22,7 +23,7 @@ class ActivityJogo : AppCompatActivity() {
     var speed: Long = 300
     var aleatorio: Int = 0
     lateinit var peca: Peca
-
+    var dificuldade:String="medio"
     lateinit var binding: ActivityJogoBinding
 
 
@@ -43,7 +44,9 @@ class ActivityJogo : AppCompatActivity() {
         //inflador
         val inflater = LayoutInflater.from(applicationContext)
 
-
+        val settings= getSharedPreferences("PREFS", Context.MODE_PRIVATE)
+        dificuldade= settings.getString("dificuldade","default").toString()
+        mudarDificuldade(dificuldade)
         for (i in 0 until LINHA) {
             for (j in 0 until COLUNA) {
                 boardView[i][j] = inflater.inflate(R.layout.inflate_image_view, binding.gridboard, false) as ImageView
@@ -291,4 +294,27 @@ class ActivityJogo : AppCompatActivity() {
 
         }
     }
+
+    private fun mudarDificuldade(dificuldad:String){
+        Toast.makeText(this,dificuldad,Toast.LENGTH_SHORT).show()
+        when(dificuldad){
+            "facil" ->{
+                speed=400
+
+                binding.textViewDificuldade.setText(dificuldad)
+            }
+            "medio" ->{
+                speed=300
+                binding.textViewDificuldade.setText(dificuldad)
+            }
+            "dificil" ->{
+                speed=200
+                binding.textViewDificuldade.setText(dificuldad)
+            }
+            else ->{
+                Toast.makeText(this,"erro na dificuldade",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

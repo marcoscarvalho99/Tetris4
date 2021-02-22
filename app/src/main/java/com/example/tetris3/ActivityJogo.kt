@@ -129,8 +129,10 @@ class ActivityJogo : AppCompatActivity() {
 
                         if (baixar(peca.getPontos())) {
                             peca.moveDown()
+                            pontuar()
 
                         } else {
+                            pontuar()
                             guardarposiccao(peca.getPontos())
                             aleatorio = Random.nextInt(4 - 0)
                             escolherPeca(aleatorio)
@@ -319,6 +321,45 @@ class ActivityJogo : AppCompatActivity() {
                 Toast.makeText(this,"erro na dificuldade",Toast.LENGTH_SHORT).show()
             }
         }
+    }
+    private fun pontuar(){
+        if(ordenarTabuleiro(checarLinhaCompleta())){
+
+            var total = binding.textViewPontosResultado.text.toString()
+            var somaTotal = total.toInt()+100
+            binding.textViewPontosResultado.text = somaTotal.toString()
+        }
+    }
+    private fun ordenarTabuleiro(linhaCompleta:Int):Boolean{
+        if(linhaCompleta == 0){
+            return false
+        }
+        var i = linhaCompleta
+        while (i>0){
+            for (j in 1 until COLUNA-1){
+                board[i][j] = board[i-1][j]
+                board[i-1][j] = 0
+            }
+            i--
+        }
+        return true
+    }
+
+    private fun checarLinhaCompleta():Int{
+        var countPeca = 0
+        for (i in 1 until LINHA-1) {
+            for (j in 1 until COLUNA-1) {
+                if(board[i][j] == 1){
+                    countPeca++
+                }
+            }
+            if(countPeca == COLUNA-2){
+                return i
+            }else{
+                countPeca = 0
+            }
+        }
+        return 0
     }
 
 }

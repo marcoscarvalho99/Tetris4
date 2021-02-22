@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.example.tetris3.Pecas.*
 import com.example.tetris3.databinding.ActivityJogoBinding
 import kotlin.random.Random
@@ -25,6 +26,7 @@ class ActivityJogo : AppCompatActivity() {
     lateinit var peca: Peca
     var dificuldade:String="medio"
     lateinit var binding: ActivityJogoBinding
+    lateinit var  viewmodel: ActivittyJogoViewModel
 
 
     var board = Array(LINHA) {
@@ -36,9 +38,11 @@ class ActivityJogo : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_jogo)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_jogo)
+        viewmodel = ViewModelProvider(this).get(ActivittyJogoViewModel::class.java)
         binding.gridboard.rowCount = LINHA
         binding.gridboard.columnCount = COLUNA
         //inflador

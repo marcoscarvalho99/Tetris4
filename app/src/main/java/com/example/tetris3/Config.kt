@@ -49,6 +49,8 @@ class Config : AppCompatActivity() {
                 }
             }
         }
+        
+        finish()
     }
     override fun onStop(){
         super.onStop()

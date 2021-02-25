@@ -7,6 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#02105E"
         tools:context=".Config">
 
         <RadioGroup
@@ -20,19 +21,28 @@
                 android:id="@+id/radioButtonFacil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/RadioFacil" />
+                android:fontFamily="@font/allan_bold"
+                android:text="@string/RadioFacil"
+                android:textColor="#F6F4F4"
+                android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/radioButtonMedio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/RadioMedio" />
+                android:fontFamily="@font/allan_bold"
+                android:text="@string/RadioMedio"
+                android:textColor="#F6F4F4"
+                android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/radioButtonDificil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/RadioDificil" />
+                android:fontFamily="@font/allan_bold"
+                android:text="@string/RadioDificil"
+                android:textColor="#F6F4F4"
+                android:textSize="20sp" />
         </RadioGroup>
 
         <Button
@@ -40,7 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="52dp"
-            android:text="@string/confirmar"
+            android:fontFamily="@font/allan_bold"
+            android:text="@string/salvar"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,8 +62,10 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/allan_bold"
             android:text="@string/configurar"
-            android:textSize="24sp"
+            android:textColor="#F6F4F4"
+            android:textSize="44sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,8 +77,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:fontFamily="@font/allan_bold"
             android:text="@string/dificuldade"
-            android:textSize="20sp"
+            android:textColor="#F6F4F4"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.22"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +90,9 @@
             android:id="@+id/textViewSair"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/allan_bold"
             android:text="@string/sair"
+            android:textColor="#F6F4F4"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

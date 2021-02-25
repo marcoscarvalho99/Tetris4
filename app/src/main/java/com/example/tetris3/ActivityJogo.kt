@@ -208,7 +208,7 @@ class ActivityJogo : AppCompatActivity() {
      private fun verificarRecord(recordAgora:Int){
          if(recordAgora> record){
              record=recordAgora;
-             Toast.makeText(applicationContext, "funcao record", Toast.LENGTH_SHORT).show()
+
 
 
          }
@@ -219,7 +219,7 @@ class ActivityJogo : AppCompatActivity() {
     private fun topo(p: Array<Ponto>):Boolean {
         p.forEach {
             if (it.x == 1 && board[it.x+1][it.y] == 1) {
-                Toast.makeText(applicationContext, "Chegou no topo", Toast.LENGTH_SHORT).show()
+
                 return true
             }
         }

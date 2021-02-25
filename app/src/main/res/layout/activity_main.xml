@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#081457"
+        android:background="#02105E"
         tools:context=".MainActivity">
 
         <TextView
@@ -14,6 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/allan_bold"
             android:text="@string/configurar"
             android:textColor="#F6F4F4"
             android:textSize="44sp"
@@ -25,19 +26,21 @@
             android:id="@+id/textViewNewGame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/allan_bold"
             android:text="@string/novogame"
             android:textColor="#F6F4F4"
             android:textSize="44sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewLogo" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
         <TextView
             android:id="@+id/textViewContinue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:fontFamily="@font/allan_bold"
             android:text="@string/continuar"
             android:textColor="#F6F4F4"
             android:textSize="44sp"
@@ -45,18 +48,26 @@
             app:layout_constraintStart_toStartOf="@+id/textViewNewGame"
             app:layout_constraintTop_toBottomOf="@+id/textViewNewGame" />
 
-        <TextView
-            android:id="@+id/textViewLogo"
+        <ImageView
+            android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/logo"
-            android:textColor="#EA0B0B"
-            android:textSize="88sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSetings"
+            app:srcCompat="@drawable/semfundotetris" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="262dp"
+            android:layout_height="254dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.463"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.120000005" />
+            app:srcCompat="@drawable/tetris2019logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

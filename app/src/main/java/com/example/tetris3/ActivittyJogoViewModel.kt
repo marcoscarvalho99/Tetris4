@@ -1,4 +1,4 @@
-package com.example.tetris3.Pecas
+package com.example.tetris3
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +17,12 @@ class ActivittyJogoViewModel : ViewModel() {
     fun incrementa(){
         _pontos.value = _pontos.value!!.plus(100)
     }
+    fun setBorderView(){
 
+    }
+
+//    fun salvarTabuleiro(boarde: Array<Int>){
+//        this.board = boarde
+//    }
 
 }

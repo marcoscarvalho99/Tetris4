@@ -1,4 +1,5 @@
 package com.example.tetris3
+import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,7 +22,6 @@ class Config : AppCompatActivity() {
 
         dificuldade= settings.getString("dificuldade","default").toString()
 
-        Toast.makeText(this, dificuldade, Toast.LENGTH_SHORT).show()
 
         //funcao para marcar o radio buton
         radio()
@@ -34,23 +34,28 @@ class Config : AppCompatActivity() {
 
                 binding.radioButtonFacil.id ->{
                     dificuldade="facil"
-                    Toast.makeText(this, dificuldade, Toast.LENGTH_SHORT).show()
+          //          Toast.makeText(this, dificuldade, Toast.LENGTH_SHORT).show()
 
                 }
                 binding.radioButtonMedio.id ->{
                     dificuldade="medio"
-                    Toast.makeText(this,dificuldade,Toast.LENGTH_SHORT).show()
+            //        Toast.makeText(this,dificuldade,Toast.LENGTH_SHORT).show()
 
                 }
                 binding.radioButtonDificil.id ->{
                     dificuldade="dificil"
-                    Toast.makeText(this,dificuldade,Toast.LENGTH_SHORT).show()
+
 
                 }
             }
+            Toast.makeText(this,"a dificuldade: "+dificuldade + " foi salva",Toast.LENGTH_SHORT).show()
         }
-        
-        finish()
+
+        binding.textViewSair.setOnClickListener(){
+
+            finish()
+        }
+
     }
     override fun onStop(){
         super.onStop()

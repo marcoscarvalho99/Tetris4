@@ -1,6 +1,7 @@
 package com.example.tetris3
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -19,15 +20,20 @@ class ActivityJogo : AppCompatActivity() {
     val COLUNA = 26
     var pause = true;
     var cordX = 1;
-    var cordY = 13;
+    var cordY = 8;
     var running = true
     var speed: Long = 300
     var aleatorio: Int = 0
-    lateinit var peca: Peca
+    var cont:Int=1
     var dificuldade:String="medio"
     lateinit var binding: ActivityJogoBinding
     lateinit var  viewmodel: ActivittyJogoViewModel
 
+    private lateinit var proximaPeca: Peca
+    private lateinit var peca: Peca
+
+    //inner class Configuracoes (var velocidade:Long, var linha:Int, var coluna:Int)
+    //private var configAtual = Configuracoes(300,20,16)
 
     var board = Array(LINHA) {
         Array(COLUNA) { 0 }
@@ -35,6 +41,9 @@ class ActivityJogo : AppCompatActivity() {
 
     var boardView = Array(LINHA) {
         arrayOfNulls<ImageView>(COLUNA)
+    }
+    private var pecaView = Array(4){
+        arrayOfNulls<ImageView>(12)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,37 +54,49 @@ class ActivityJogo : AppCompatActivity() {
         viewmodel = ViewModelProvider(this).get(ActivittyJogoViewModel::class.java)
         binding.gridboard.rowCount = LINHA
         binding.gridboard.columnCount = COLUNA
+        binding.viewModel = viewmodel
+        binding.lifecycleOwner=this
         //inflador
         val inflater = LayoutInflater.from(applicationContext)
 
         val settings= getSharedPreferences("PREFS", Context.MODE_PRIVATE)
         dificuldade= settings.getString("dificuldade","default").toString()
         mudarDificuldade(dificuldade)
+
+        binding.newPeca.rowCount = 6
+        binding.newPeca.columnCount = 12
+
         for (i in 0 until LINHA) {
             for (j in 0 until COLUNA) {
                 boardView[i][j] = inflater.inflate(R.layout.inflate_image_view, binding.gridboard, false) as ImageView
                 binding.gridboard.addView(boardView[i][j])
             }
         }
-        for (i in 0 until LINHA) {
-            for (j in 0 until COLUNA) {
 
-                boardView[i][j]!!.setImageResource(R.drawable.gray);
+        for (i in 0 until 4) {
+            for (j in 0 until 6) {
+                pecaView[i][j] = inflater.inflate(R.layout.inflate_image_view, binding.newPeca, false) as ImageView
+                binding.newPeca.addView(pecaView[i][j])
             }
         }
+
 
         gameRun()
     }
 
 
-    fun gameRun() {
 
+
+
+    fun gameRun() {
 
         Thread {
 
             aleatorio = Random.nextInt(4 - 0)
+            peca = escolherPeca(aleatorio)
 
-            escolherPeca(aleatorio)
+            aleatorio = Random.nextInt(4 - 0)
+            proximaPeca = escolherPeca(aleatorio)
 
 
             while (running) {
@@ -83,15 +104,18 @@ class ActivityJogo : AppCompatActivity() {
                     pause = !pause
                 }
 
-
                 if (pause) {
 
                     Thread.sleep(speed)
                     runOnUiThread {
                         //limpa tela
-                        for (i in 1 until LINHA - 1) {
-                            for (j in 1 until COLUNA - 1) {
-                                if (board[i][j] == 1) {
+                        for (i in 0 until LINHA ) {
+                            for (j in 0 until COLUNA ) {
+                               if(borda(Ponto(i,j))){
+                                   boardView[i][j]!!.setImageResource(R.drawable.gray)
+                               }
+
+                               else if (board[i][j] == 1) {
                                     boardView[i][j]!!.setImageResource(R.drawable.white)
                                 } else {
                                     boardView[i][j]!!.setImageResource(R.drawable.black)
@@ -121,13 +145,27 @@ class ActivityJogo : AppCompatActivity() {
                         }
 
                         binding.imageButtonGirarPeca.setOnClickListener {
-                            Toast.makeText(this, "botaogirar", Toast.LENGTH_SHORT).show()
 
                             girarPeca()
                             Thread.sleep(300)
                         }
+                        if(topo(peca.getPontos())){
 
-                        if (baixar(peca.getPontos())) {
+                            if(cont==2){
+                                running = false
+                                val i = Intent(this, Resultado::class.java)
+                                var vale=viewmodel._pontos.value
+
+                             //   Toast.makeText(this,vale.toString(),Toast.LENGTH_SHORT).show()
+
+                                i.putExtra("pontuacao",vale.toString())
+                                finish()
+                                startActivity(i)
+                            }
+                            cont++
+                        }
+
+                        else  if (baixar(peca.getPontos())) {
                             peca.moveDown()
                             pontuar()
 
@@ -135,21 +173,21 @@ class ActivityJogo : AppCompatActivity() {
                             pontuar()
                             guardarposiccao(peca.getPontos())
                             aleatorio = Random.nextInt(4 - 0)
-                            escolherPeca(aleatorio)
-                            speed = 300;
-                        }
-                        if (board[1][14] == 1) {
-                            running = false
+
+                            peca = proximaPeca
+                            proximaPeca = escolherPeca(aleatorio)
+                            mudarDificuldade(dificuldade)
+                            //speed = 300 chamar a função de verificar nivel de speed;
                         }
 
                         //print peça
                         try {
-
                             printarPeca()
+                           exibirProximaPeca()
 
                         } catch (e: ArrayIndexOutOfBoundsException) {
                             //se a peça passou das bordas eu vou parar o jogo
-                            running = false
+                            Toast.makeText(this,"passou do limite da matriz",Toast.LENGTH_SHORT).show()
                         }
 
                     }
@@ -159,26 +197,61 @@ class ActivityJogo : AppCompatActivity() {
         }.start()
     }
 
-    fun escolherPeca(tipo: Int) {
-        when (tipo) {
-            0 -> {
-                peca = Quadrado(cordX, cordY)
-            }
-            1 -> {
-                peca = Triangulo(cordX, cordY)
-            }
-            2 -> {
-                peca = Coluna(cordX, cordY)
-            }
-            3 -> {
-                peca = LetraLEsquerda(cordX, cordY)
-            }
-            else -> {
-                peca = LetraSDireita(cordX, cordX)
-            }
 
+    override fun onStop() {
+        super.onStop()
+    }
+
+
+
+
+
+    private fun topo(p: Array<Ponto>):Boolean {
+        p.forEach {
+            if (it.x == 1 && board[it.x+1][it.y] == 1) {
+                Toast.makeText(applicationContext, "Chegou no topo", Toast.LENGTH_SHORT).show()
+                return true
+            }
         }
+        return false
+    }
 
+    fun escolherPeca(tipo: Int):Peca {
+
+          return  when (tipo) {
+                0 -> {
+                     Quadrado(cordX, cordY)
+                }
+                1 -> {
+                     Triangulo(cordX, cordY)
+                }
+                2 -> {
+                     Coluna(cordX, cordY)
+                }
+                3 -> {
+                    LetraLEsquerda(cordX, cordY)
+                }
+                else -> {
+                    LetraSDireita(cordX, cordX)
+                }
+
+            }
+
+    }
+
+    private fun exibirProximaPeca(){
+        for (i in 0 until 4) {
+            for (j in 0 until 6) {
+                pecaView[i][j]!!.setImageResource(R.drawable.semfundo)
+            }
+        }
+        try {
+            proximaPeca.getPontos().forEach {
+                pecaView[it.x][it.y-6]!!.setImageResource(R.drawable.white)
+            }
+        }catch (e:ArrayIndexOutOfBoundsException){
+            Toast.makeText(this, "Saiu da area da matriz", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -202,6 +275,7 @@ class ActivityJogo : AppCompatActivity() {
         return p.y == 0 || p.x == LINHA - 1 || p.y == COLUNA - 1 || p.x == 0
     }
 
+
     private fun posicaoValida(p: Ponto): Boolean {
         if (
                 (board[p.x][p.y - 1] == 1 && board[p.x + 1][p.y] == 1) ||
@@ -212,6 +286,7 @@ class ActivityJogo : AppCompatActivity() {
         return false
     }
 
+
     private fun baixar(p: Array<Ponto>): Boolean {
         p.forEach {
             if (borda(Ponto(it.x + 1, it.y)) || posicaoValida(it)) {
@@ -221,11 +296,13 @@ class ActivityJogo : AppCompatActivity() {
         return true
     }
 
+
     private fun guardarposiccao(p: Array<Ponto>) {
         p.forEach {
             board[it.x][it.y] = 1
         }
     }
+
 
     private fun paraDireita(p: Array<Ponto>): Boolean {
 
@@ -237,6 +314,7 @@ class ActivityJogo : AppCompatActivity() {
         return true
     }
 
+
     private fun paraEsquerda(p: Array<Ponto>): Boolean {
         p.forEach {
             if (board[it.x][it.y - 1] == 1 || borda(Ponto(it.x, it.y - 1))) {
@@ -245,6 +323,7 @@ class ActivityJogo : AppCompatActivity() {
         }
         return true
     }
+
 
 
     private fun girarPeca() {
@@ -302,19 +381,19 @@ class ActivityJogo : AppCompatActivity() {
     }
 
     private fun mudarDificuldade(dificuldad:String){
-        Toast.makeText(this,dificuldad,Toast.LENGTH_SHORT).show()
+      //  Toast.makeText(this,dificuldad,Toast.LENGTH_SHORT).show()
         when(dificuldad){
             "facil" ->{
-                speed=400
+                speed=350
 
                 binding.textViewDificuldade.setText(dificuldad)
             }
             "medio" ->{
-                speed=300
+                speed=250
                 binding.textViewDificuldade.setText(dificuldad)
             }
             "dificil" ->{
-                speed=200
+                speed=150
                 binding.textViewDificuldade.setText(dificuldad)
             }
             else ->{
@@ -322,14 +401,25 @@ class ActivityJogo : AppCompatActivity() {
             }
         }
     }
-    private fun pontuar(){
-        if(ordenarTabuleiro(checarLinhaCompleta())){
 
-            var total = binding.textViewPontosResultado.text.toString()
-            var somaTotal = total.toInt()+100
-            binding.textViewPontosResultado.text = somaTotal.toString()
+    private fun pontuar(){
+        if(ordenarTabuleiro(checarLinhaCompleta())) {
+
+            //var total = binding.textViewPontosResultado.text.toString()
+            //var somaTotal = total.toInt() + 100
+            viewmodel.incrementa()
+            //binding.textViewPontosResultado.text = (viewmodel._pontos).toString()
+
+//            for (i in 0 until LINHA) {
+//
+//                for (k in i downTo COLUNA) {
+//                    viewmodel.board[i][k] = board[i][k]
+//                }
+//            }
         }
     }
+
+
     private fun ordenarTabuleiro(linhaCompleta:Int):Boolean{
         if(linhaCompleta == 0){
             return false

@@ -16,5 +16,6 @@
     <string name="sair">exit</string>
     <string name="novorecord">new record:</string>
     <string name="record">record:</string>
+    <string name="Maiorecorde">big record</string>
 
 </resources>

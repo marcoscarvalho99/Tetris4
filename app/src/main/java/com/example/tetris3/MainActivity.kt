@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
 
@@ -22,5 +23,9 @@ class MainActivity : AppCompatActivity() {
         val intent= Intent(this,Config::class.java)
         startActivity(intent)
     }
+        binding.textViewContinue.setOnClickListener(){
+            val intent= Intent(this,Resultado::class.java)
+            startActivity(intent)
+        }
     }
 }

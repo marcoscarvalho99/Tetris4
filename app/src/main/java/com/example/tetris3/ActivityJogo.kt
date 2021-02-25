@@ -25,6 +25,7 @@ class ActivityJogo : AppCompatActivity() {
     var speed: Long = 300
     var aleatorio: Int = 0
     var cont:Int=1
+    var record:Int=0
     var dificuldade:String="medio"
     lateinit var binding: ActivityJogoBinding
     lateinit var  viewmodel: ActivittyJogoViewModel
@@ -58,13 +59,15 @@ class ActivityJogo : AppCompatActivity() {
         binding.lifecycleOwner=this
         //inflador
         val inflater = LayoutInflater.from(applicationContext)
-
         val settings= getSharedPreferences("PREFS", Context.MODE_PRIVATE)
-        dificuldade= settings.getString("dificuldade","default").toString()
-        mudarDificuldade(dificuldade)
 
-        binding.newPeca.rowCount = 6
-        binding.newPeca.columnCount = 12
+        dificuldade= settings.getString("dificuldade","default").toString()
+
+
+        record=settings.getInt("record",1)
+
+        binding.newPeca.rowCount = 2
+        binding.newPeca.columnCount = 6
 
         for (i in 0 until LINHA) {
             for (j in 0 until COLUNA) {
@@ -80,7 +83,7 @@ class ActivityJogo : AppCompatActivity() {
             }
         }
 
-
+        mudarDificuldade(dificuldade)
         gameRun()
     }
 
@@ -92,12 +95,11 @@ class ActivityJogo : AppCompatActivity() {
 
         Thread {
 
-            aleatorio = Random.nextInt(4 - 0)
+            aleatorio = Random.nextInt(5 - 0)
             peca = escolherPeca(aleatorio)
 
-            aleatorio = Random.nextInt(4 - 0)
+            aleatorio = Random.nextInt(5 - 0)
             proximaPeca = escolherPeca(aleatorio)
-
 
             while (running) {
                 binding.imageButtonPause.setOnClickListener() {
@@ -124,66 +126,48 @@ class ActivityJogo : AppCompatActivity() {
                             }
                         }
 
-
-                        //move peça atual para esquerda
-
                         binding.imageButtonEsquerda.setOnClickListener() {
-
                             if (paraEsquerda(peca.getPontos())) {
                                 peca.moveLeft()
                             }
                         }
-                        //direita
                         binding.imageButtonDireita.setOnClickListener() {
                             if (paraDireita(peca.getPontos())) {
                                 peca.moveRight()
                             }
                         }
-
                         binding.imageButtonBaixo.setOnClickListener() {
                             speed = 100
                         }
-
                         binding.imageButtonGirarPeca.setOnClickListener {
-
                             girarPeca()
                             Thread.sleep(300)
                         }
                         if(topo(peca.getPontos())){
-
-                            if(cont==2){
-                                running = false
-                                val i = Intent(this, Resultado::class.java)
-                                var vale=viewmodel._pontos.value
-
-                             //   Toast.makeText(this,vale.toString(),Toast.LENGTH_SHORT).show()
-
-                                i.putExtra("pontuacao",vale.toString())
-                                finish()
-                                startActivity(i)
-                            }
-                            cont++
+                           irParaResultado() //mudar para tela de resultado e passa parametros
                         }
-
                         else  if (baixar(peca.getPontos())) {
+                            ///move a peca para baixo
                             peca.moveDown()
+                            //atualiza o tabuleiro e marca os pontos
                             pontuar()
-
                         } else {
+                            //salvar os pontos e mostra
                             pontuar()
+                            //atualiza o tabuleiro e marca os pontos
                             guardarposiccao(peca.getPontos())
-                            aleatorio = Random.nextInt(4 - 0)
 
+                            aleatorio = Random.nextInt(5 - 0)
                             peca = proximaPeca
                             proximaPeca = escolherPeca(aleatorio)
-                            mudarDificuldade(dificuldade)
-                            //speed = 300 chamar a função de verificar nivel de speed;
-                        }
 
-                        //print peça
+                            //volta s precisar para a velocidade certa
+                            mudarDificuldade(dificuldade)
+                        }
+                        //print peça atual e a proxima
                         try {
                             printarPeca()
-                           exibirProximaPeca()
+                            exibirProximaPeca()
 
                         } catch (e: ArrayIndexOutOfBoundsException) {
                             //se a peça passou das bordas eu vou parar o jogo
@@ -197,13 +181,39 @@ class ActivityJogo : AppCompatActivity() {
         }.start()
     }
 
+     fun irParaResultado(){
+         if(cont==3){
+             running = false
+             val i = Intent(this, Resultado::class.java)
 
-    override fun onStop() {
+             var vale=viewmodel._pontos.value
+
+             verificarRecord(vale!!) //verifica o recorde atual e o big record
+
+             i.putExtra("record",record)
+             i.putExtra("pontuacao",vale)
+             finish()
+             startActivity(i)
+         }
+         cont++
+    }
+    override fun onStop(){
         super.onStop()
+        val settings =getSharedPreferences("PREFS", Context.MODE_PRIVATE)
+        var editor = settings.edit()
+        editor.putInt("record",record)
+        editor.commit()
     }
 
+     private fun verificarRecord(recordAgora:Int){
+         if(recordAgora> record){
+             record=recordAgora;
+             Toast.makeText(applicationContext, "funcao record", Toast.LENGTH_SHORT).show()
 
 
+         }
+
+     }
 
 
     private fun topo(p: Array<Ponto>):Boolean {
@@ -229,7 +239,10 @@ class ActivityJogo : AppCompatActivity() {
                      Coluna(cordX, cordY)
                 }
                 3 -> {
-                    LetraLEsquerda(cordX, cordY)
+                    FormaL(cordX, cordY)
+                }
+                4 -> {
+                  LetraSEsquerda(cordX, cordY)
                 }
                 else -> {
                     LetraSDireita(cordX, cordX)
@@ -365,14 +378,14 @@ class ActivityJogo : AppCompatActivity() {
                     peca.setOrietacaPeca((peca as LetraSDireita).orientacao)
                 }
             }
-            is LetraLEsquerda -> {
+            is LetraSEsquerda -> {
                 var pontos = peca.rotacionar()
                 if (paraEsquerda(pontos) || paraEsquerda(pontos) || baixar(pontos)) {
                     peca.setPontos(pontos)
                     peca.getPontos().forEach {
                         it.moveUp()
                     }
-                    peca.setOrietacaPeca((peca as LetraLEsquerda).orientacao)
+                    peca.setOrietacaPeca((peca as LetraSEsquerda).orientacao)
                 }
             }
 

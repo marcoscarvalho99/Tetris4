@@ -9,33 +9,25 @@ import com.example.tetris3.databinding.ActivityMainBinding
 import com.example.tetris3.databinding.ActivityResultadoBinding
 
 class Resultado : AppCompatActivity() {
-lateinit var binding : ActivityResultadoBinding
-    var record=0
+
+    lateinit var binding : ActivityResultadoBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this,R.layout.activity_resultado)
-       val valor = intent.extras?.getString("pontuacao")
-        val settings= getSharedPreferences("PREFS",Context.MODE_PRIVATE)
-        record= settings.getInt("record",0)
-        var editor = settings.edit()
-        binding.pontosfinais.setText(valor+" atual");
 
+        val valor = intent.extras?.getInt("pontuacao")
+        val recordmaior = intent.extras?.getInt("record")
 
+        records(valor.toString() ,recordmaior.toString())
 
-
-    //    var aux:String=record.toString()
-      //  binding.textViewnovoRecorder.setText(aux)
-        //binding.pontosfinais.setText(record.toString()+"pontos")
         binding.textViewNovoJogo.setOnClickListener {
 
             val intent = Intent(this, ActivityJogo::class.java)
             finish()
             startActivity(intent)
         }
-
-
         binding.textViewSaiir.setOnClickListener(){
             val  intent =Intent(this,MainActivity::class.java)
             finish()
@@ -44,18 +36,19 @@ lateinit var binding : ActivityResultadoBinding
 
 
     }
-    private fun verificarRecorder( valor :Int){
-    if(record<=valor){
+
+    private fun records(valo:String,recordm:String){
+        if(valo==null){
+            binding.pontosfinais.setText("0.0");
+        }
+        if(recordm==null){
+            binding.textViewnovoRecorder.setText("0.0")
+        }
+        if(recordm!=null && valo!=null){
+                    binding.pontosfinais.setText(valo.toString())
+                    binding.textViewnovoRecorder.setText(recordm.toString())
+        }
 
     }
 
-    }
-    override fun onStop(){
-        super.onStop()
-
-        val settings =getSharedPreferences("PREFS", Context.MODE_PRIVATE)
-        var editor = settings.edit()
-        editor.putInt("record",record)
-        editor.commit()
-    }
 }

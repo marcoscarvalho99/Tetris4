@@ -1,6 +1,6 @@
 package com.example.tetris3.Pecas
 
-class LetraLEsquerda(linha:Int, coluna:Int, var orientacao:Int = 1): Peca(
+class LetraSEsquerda(linha:Int, coluna:Int, var orientacao:Int = 1): Peca(
         Ponto(linha,coluna-1),
         Ponto(linha,coluna),
         Ponto(linha+1,coluna),

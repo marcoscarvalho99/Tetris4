@@ -17,12 +17,6 @@ class ActivittyJogoViewModel : ViewModel() {
     fun incrementa(){
         _pontos.value = _pontos.value!!.plus(100)
     }
-    fun setBorderView(){
 
-    }
-
-//    fun salvarTabuleiro(boarde: Array<Int>){
-//        this.board = boarde
-//    }
 
 }

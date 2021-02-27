@@ -48,7 +48,7 @@ class Config : AppCompatActivity() {
 
                 }
             }
-            Toast.makeText(this,"a dificuldade: "+dificuldade + " foi salva",Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"a dificuldade: "+dificuldade + " foi salva",Toast.LENGTH_SHORT).show()
         }
 
         binding.textViewSair.setOnClickListener(){

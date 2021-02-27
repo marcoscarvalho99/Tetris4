@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
         binding.textViewContinue.setOnClickListener(){
-            val intent= Intent(this,Resultado::class.java)
+            val intent= Intent(this, ActivityJogo::class.java)
             startActivity(intent)
         }
     }

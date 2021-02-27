@@ -26,15 +26,15 @@ class ActivityJogo : AppCompatActivity() {
     var aleatorio: Int = 0
     var cont:Int=1
     var record:Int=0
+    var recordAtual=0;
     var dificuldade:String="medio"
+
     lateinit var binding: ActivityJogoBinding
     lateinit var  viewmodel: ActivittyJogoViewModel
 
     private lateinit var proximaPeca: Peca
     private lateinit var peca: Peca
 
-    //inner class Configuracoes (var velocidade:Long, var linha:Int, var coluna:Int)
-    //private var configAtual = Configuracoes(300,20,16)
 
     var board = Array(LINHA) {
         Array(COLUNA) { 0 }
@@ -87,10 +87,7 @@ class ActivityJogo : AppCompatActivity() {
         gameRun()
     }
 
-
-
-
-
+    //INICIA O JOGO AO CHAMAR
     fun gameRun() {
 
         Thread {
@@ -187,7 +184,7 @@ class ActivityJogo : AppCompatActivity() {
              val i = Intent(this, Resultado::class.java)
 
              var vale=viewmodel._pontos.value
-
+                recordAtual=vale!!;
              verificarRecord(vale!!) //verifica o recorde atual e o big record
 
              i.putExtra("record",record)
@@ -202,6 +199,7 @@ class ActivityJogo : AppCompatActivity() {
         val settings =getSharedPreferences("PREFS", Context.MODE_PRIVATE)
         var editor = settings.edit()
         editor.putInt("record",record)
+        editor.putInt("ultimorecord",recordAtual);
         editor.commit()
     }
 
@@ -209,12 +207,9 @@ class ActivityJogo : AppCompatActivity() {
          if(recordAgora> record){
              record=recordAgora;
 
-
-
          }
 
      }
-
 
     private fun topo(p: Array<Ponto>):Boolean {
         p.forEach {
@@ -267,7 +262,6 @@ class ActivityJogo : AppCompatActivity() {
         }
     }
 
-
     fun printarPeca() {
 
         try {
@@ -283,11 +277,9 @@ class ActivityJogo : AppCompatActivity() {
         }
     }
 
-
     private fun borda(p: Ponto): Boolean {
         return p.y == 0 || p.x == LINHA - 1 || p.y == COLUNA - 1 || p.x == 0
     }
-
 
     private fun posicaoValida(p: Ponto): Boolean {
         if (
@@ -299,7 +291,6 @@ class ActivityJogo : AppCompatActivity() {
         return false
     }
 
-
     private fun baixar(p: Array<Ponto>): Boolean {
         p.forEach {
             if (borda(Ponto(it.x + 1, it.y)) || posicaoValida(it)) {
@@ -309,13 +300,11 @@ class ActivityJogo : AppCompatActivity() {
         return true
     }
 
-
     private fun guardarposiccao(p: Array<Ponto>) {
         p.forEach {
             board[it.x][it.y] = 1
         }
     }
-
 
     private fun paraDireita(p: Array<Ponto>): Boolean {
 
@@ -327,7 +316,6 @@ class ActivityJogo : AppCompatActivity() {
         return true
     }
 
-
     private fun paraEsquerda(p: Array<Ponto>): Boolean {
         p.forEach {
             if (board[it.x][it.y - 1] == 1 || borda(Ponto(it.x, it.y - 1))) {
@@ -337,12 +325,10 @@ class ActivityJogo : AppCompatActivity() {
         return true
     }
 
-
-
     private fun girarPeca() {
         when (peca) {
             is Quadrado -> {
-                //peca.rotacionar()
+
             }
             is Coluna -> {
                 var pontos = peca.rotacionar()
@@ -389,12 +375,11 @@ class ActivityJogo : AppCompatActivity() {
                 }
             }
 
-
         }
     }
 
     private fun mudarDificuldade(dificuldad:String){
-      //  Toast.makeText(this,dificuldad,Toast.LENGTH_SHORT).show()
+
         when(dificuldad){
             "facil" ->{
                 speed=350
@@ -418,17 +403,8 @@ class ActivityJogo : AppCompatActivity() {
     private fun pontuar(){
         if(ordenarTabuleiro(checarLinhaCompleta())) {
 
-            //var total = binding.textViewPontosResultado.text.toString()
-            //var somaTotal = total.toInt() + 100
             viewmodel.incrementa()
-            //binding.textViewPontosResultado.text = (viewmodel._pontos).toString()
 
-//            for (i in 0 until LINHA) {
-//
-//                for (k in i downTo COLUNA) {
-//                    viewmodel.board[i][k] = board[i][k]
-//                }
-//            }
         }
     }
 

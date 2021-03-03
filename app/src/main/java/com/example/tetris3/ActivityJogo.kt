@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.view.LayoutInflater
 import android.widget.Toast
@@ -15,7 +16,7 @@ import kotlin.random.Random
 
 
 class ActivityJogo : AppCompatActivity() {
-
+    val REQUEST_CODE = 1
     val LINHA = 36
     val COLUNA = 26
     var pause = true;
@@ -63,7 +64,6 @@ class ActivityJogo : AppCompatActivity() {
 
         dificuldade= settings.getString("dificuldade","default").toString()
 
-
         record=settings.getInt("record",1)
 
         binding.newPeca.rowCount = 2
@@ -84,8 +84,13 @@ class ActivityJogo : AppCompatActivity() {
         }
 
         mudarDificuldade(dificuldade)
+
         gameRun()
     }
+
+
+
+
 
     //INICIA O JOGO AO CHAMAR
     fun gameRun() {
@@ -100,10 +105,15 @@ class ActivityJogo : AppCompatActivity() {
 
             while (running) {
                 binding.imageButtonPause.setOnClickListener() {
-                    pause = !pause
+
+                    var intent = Intent(this, MainActivity::class.java)
+                    var param = Bundle()
+                    param.putInt("continuar", 1)
+                    intent.putExtras(param)
+                    startActivityForResult(intent, REQUEST_CODE)
                 }
 
-                if (pause) {
+
 
                     Thread.sleep(speed)
                     runOnUiThread {
@@ -114,7 +124,7 @@ class ActivityJogo : AppCompatActivity() {
                                    boardView[i][j]!!.setImageResource(R.drawable.gray)
                                }
 
-                               else if (board[i][j] == 1) {
+                               else if (viewmodel.board[i][j] == 1) {
                                     boardView[i][j]!!.setImageResource(R.drawable.white)
                                 } else {
                                     boardView[i][j]!!.setImageResource(R.drawable.black)
@@ -172,7 +182,7 @@ class ActivityJogo : AppCompatActivity() {
                         }
 
                     }
-                }
+
 
             }
         }.start()
@@ -194,6 +204,22 @@ class ActivityJogo : AppCompatActivity() {
          }
          cont++
     }
+    //apagar se n for usar
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+//        outState.putBoolean("pause",pause)
+       // pause=!pause
+        Toast.makeText(this,"onsave",Toast.LENGTH_LONG).show()
+    }
+
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        //      pause =! savedInstanceState.getBoolean("pause");
+        Toast.makeText(this,"onRestore",Toast.LENGTH_LONG).show()
+    }
+
     override fun onStop(){
         super.onStop()
         val settings =getSharedPreferences("PREFS", Context.MODE_PRIVATE)
@@ -202,6 +228,27 @@ class ActivityJogo : AppCompatActivity() {
         editor.putInt("ultimorecord",recordAtual);
         editor.commit()
     }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("AULA", "onResume() invocado.")
+        running = true
+
+    }
+    override fun onStart() {
+        Log.i("AULA", "onStart() invocado.")
+        super.onStart()
+        running = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.i("AULA", "onPause invocado.")
+
+        running = false
+
+    }
+
 
      private fun verificarRecord(recordAgora:Int){
          if(recordAgora> record){
@@ -213,7 +260,7 @@ class ActivityJogo : AppCompatActivity() {
 
     private fun topo(p: Array<Ponto>):Boolean {
         p.forEach {
-            if (it.x == 1 && board[it.x+1][it.y] == 1) {
+            if (it.x == 1 && viewmodel.board[it.x+1][it.y] == 1) {
 
                 return true
             }
@@ -283,8 +330,8 @@ class ActivityJogo : AppCompatActivity() {
 
     private fun posicaoValida(p: Ponto): Boolean {
         if (
-                (board[p.x][p.y - 1] == 1 && board[p.x + 1][p.y] == 1) ||
-                (board[p.x][p.y + 1] == 1 && board[p.x + 1][p.y] == 1) || (board[p.x + 1][p.y] == 1)
+                (viewmodel.board[p.x][p.y - 1] == 1 && viewmodel.board[p.x + 1][p.y] == 1) ||
+                (viewmodel.board[p.x][p.y + 1] == 1 && viewmodel.board[p.x + 1][p.y] == 1) || (viewmodel.board[p.x + 1][p.y] == 1)
         ) {
             return true
         }
@@ -302,14 +349,14 @@ class ActivityJogo : AppCompatActivity() {
 
     private fun guardarposiccao(p: Array<Ponto>) {
         p.forEach {
-            board[it.x][it.y] = 1
+            viewmodel.board[it.x][it.y] = 1
         }
     }
 
     private fun paraDireita(p: Array<Ponto>): Boolean {
 
         p.forEach {
-            if (board[it.x][it.y + 1] == 1 || borda(Ponto(it.x, it.y + 1))) {
+            if (viewmodel.board[it.x][it.y + 1] == 1 || borda(Ponto(it.x, it.y + 1))) {
                 return false
             }
         }
@@ -318,7 +365,7 @@ class ActivityJogo : AppCompatActivity() {
 
     private fun paraEsquerda(p: Array<Ponto>): Boolean {
         p.forEach {
-            if (board[it.x][it.y - 1] == 1 || borda(Ponto(it.x, it.y - 1))) {
+            if (viewmodel.board[it.x][it.y - 1] == 1 || borda(Ponto(it.x, it.y - 1))) {
                 return false
             }
         }
@@ -416,8 +463,8 @@ class ActivityJogo : AppCompatActivity() {
         var i = linhaCompleta
         while (i>0){
             for (j in 1 until COLUNA-1){
-                board[i][j] = board[i-1][j]
-                board[i-1][j] = 0
+                viewmodel.board[i][j] = viewmodel.board[i-1][j]
+                viewmodel.board[i-1][j] = 0
             }
             i--
         }
@@ -428,7 +475,7 @@ class ActivityJogo : AppCompatActivity() {
         var countPeca = 0
         for (i in 1 until LINHA-1) {
             for (j in 1 until COLUNA-1) {
-                if(board[i][j] == 1){
+                if(viewmodel.board[i][j] == 1){
                     countPeca++
                 }
             }

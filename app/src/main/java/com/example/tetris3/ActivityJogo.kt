@@ -1,5 +1,6 @@
 package com.example.tetris3
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +20,7 @@ class ActivityJogo : AppCompatActivity() {
     val REQUEST_CODE = 1
     val LINHA = 36
     val COLUNA = 26
-    var pause = true;
+    var pause = false;
     var cordX = 1;
     var cordY = 8;
     var running = true
@@ -58,6 +59,18 @@ class ActivityJogo : AppCompatActivity() {
         binding.gridboard.columnCount = COLUNA
         binding.viewModel = viewmodel
         binding.lifecycleOwner=this
+
+
+        binding.imageButtonPause.setOnClickListener() {
+
+            var intent = Intent(this, MainActivity::class.java)
+            var param = Bundle()
+            param.putInt("continuar", 1)
+            intent.putExtras(param)
+            startActivityForResult(intent, REQUEST_CODE)
+        }
+
+
         //inflador
         val inflater = LayoutInflater.from(applicationContext)
         val settings= getSharedPreferences("PREFS", Context.MODE_PRIVATE)
@@ -89,12 +102,8 @@ class ActivityJogo : AppCompatActivity() {
     }
 
 
-
-
-
     //INICIA O JOGO AO CHAMAR
     fun gameRun() {
-
         Thread {
 
             aleatorio = Random.nextInt(5 - 0)
@@ -104,27 +113,20 @@ class ActivityJogo : AppCompatActivity() {
             proximaPeca = escolherPeca(aleatorio)
 
             while (running) {
-                binding.imageButtonPause.setOnClickListener() {
-
-                    var intent = Intent(this, MainActivity::class.java)
-                    var param = Bundle()
-                    param.putInt("continuar", 1)
-                    intent.putExtras(param)
-                    startActivityForResult(intent, REQUEST_CODE)
-                }
-
-
+                if(pause== true){
+                    while (pause){ }
+                }else{
 
                     Thread.sleep(speed)
                     runOnUiThread {
                         //limpa tela
                         for (i in 0 until LINHA ) {
                             for (j in 0 until COLUNA ) {
-                               if(borda(Ponto(i,j))){
-                                   boardView[i][j]!!.setImageResource(R.drawable.gray)
-                               }
+                                if(borda(Ponto(i,j))){
+                                    boardView[i][j]!!.setImageResource(R.drawable.gray)
+                                }
 
-                               else if (viewmodel.board[i][j] == 1) {
+                                else if (viewmodel.board[i][j] == 1) {
                                     boardView[i][j]!!.setImageResource(R.drawable.white)
                                 } else {
                                     boardView[i][j]!!.setImageResource(R.drawable.black)
@@ -151,7 +153,7 @@ class ActivityJogo : AppCompatActivity() {
                             Thread.sleep(300)
                         }
                         if(topo(peca.getPontos())){
-                           irParaResultado() //mudar para tela de resultado e passa parametros
+                            irParaResultado() //mudar para tela de resultado e passa parametros
                         }
                         else  if (baixar(peca.getPontos())) {
                             ///move a peca para baixo
@@ -180,10 +182,8 @@ class ActivityJogo : AppCompatActivity() {
                             //se a peça passou das bordas eu vou parar o jogo
                             Toast.makeText(this,"passou do limite da matriz",Toast.LENGTH_SHORT).show()
                         }
-
                     }
-
-
+                };
             }
         }.start()
     }
@@ -204,22 +204,12 @@ class ActivityJogo : AppCompatActivity() {
          }
          cont++
     }
-    //apagar se n for usar
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-//        outState.putBoolean("pause",pause)
-       // pause=!pause
-        Toast.makeText(this,"onsave",Toast.LENGTH_LONG).show()
     }
-
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        //      pause =! savedInstanceState.getBoolean("pause");
-        Toast.makeText(this,"onRestore",Toast.LENGTH_LONG).show()
     }
-
     override fun onStop(){
         super.onStop()
         val settings =getSharedPreferences("PREFS", Context.MODE_PRIVATE)
@@ -228,25 +218,20 @@ class ActivityJogo : AppCompatActivity() {
         editor.putInt("ultimorecord",recordAtual);
         editor.commit()
     }
-
     override fun onResume() {
         super.onResume()
         Log.i("AULA", "onResume() invocado.")
-        running = true
-
+        pause=false
     }
     override fun onStart() {
         Log.i("AULA", "onStart() invocado.")
         super.onStart()
-        running = true
     }
 
     override fun onPause() {
         super.onPause()
         Log.i("AULA", "onPause invocado.")
-
-        running = false
-
+        pause = true
     }
 
 
@@ -255,7 +240,6 @@ class ActivityJogo : AppCompatActivity() {
              record=recordAgora;
 
          }
-
      }
 
     private fun topo(p: Array<Ponto>):Boolean {
@@ -291,9 +275,7 @@ class ActivityJogo : AppCompatActivity() {
                 }
 
             }
-
     }
-
     private fun exibirProximaPeca(){
         for (i in 0 until 4) {
             for (j in 0 until 6) {
@@ -315,12 +297,10 @@ class ActivityJogo : AppCompatActivity() {
             peca.getPontos().forEach {
 
                 boardView[it.x][it.y]!!.setImageResource(R.drawable.white)
-
             }
         } catch (e: ArrayIndexOutOfBoundsException) {
             //se a peça passou das bordas eu vou parar o jogo
             running = false
-
         }
     }
 
@@ -354,7 +334,6 @@ class ActivityJogo : AppCompatActivity() {
     }
 
     private fun paraDireita(p: Array<Ponto>): Boolean {
-
         p.forEach {
             if (viewmodel.board[it.x][it.y + 1] == 1 || borda(Ponto(it.x, it.y + 1))) {
                 return false
@@ -375,7 +354,6 @@ class ActivityJogo : AppCompatActivity() {
     private fun girarPeca() {
         when (peca) {
             is Quadrado -> {
-
             }
             is Coluna -> {
                 var pontos = peca.rotacionar()
@@ -451,10 +429,8 @@ class ActivityJogo : AppCompatActivity() {
         if(ordenarTabuleiro(checarLinhaCompleta())) {
 
             viewmodel.incrementa()
-
         }
     }
-
 
     private fun ordenarTabuleiro(linhaCompleta:Int):Boolean{
         if(linhaCompleta == 0){
